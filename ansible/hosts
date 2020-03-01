@@ -1,0 +1,15 @@
+[master]
+node00 ansible_host=172.16.0.1 ansible_user=chiwanpark
+
+[worker]
+node01 ansible_host=172.16.0.101 ansible_user=chiwanpark
+node02 ansible_host=172.16.0.102 ansible_user=chiwanpark
+node03 ansible_host=172.16.0.103 ansible_user=chiwanpark
+node04 ansible_host=172.16.0.104 ansible_user=chiwanpark
+node05 ansible_host=172.16.0.105 ansible_user=chiwanpark
+node06 ansible_host=172.16.0.106 ansible_user=chiwanpark
+node07 ansible_host=172.16.0.107 ansible_user=chiwanpark
+
+[all:children]
+master
+worker

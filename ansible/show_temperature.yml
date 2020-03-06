@@ -1,0 +1,12 @@
+---
+- hosts: all
+  gather_facts: no
+
+  tasks:
+  - name: load temperature
+    shell: cat /etc/armbianmonitor/datasources/soctemp
+    register: temperature
+  
+  - name: show temperature
+    debug: 
+      msg: "{{ temperature.stdout | float / 1000 }}"

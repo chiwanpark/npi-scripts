@@ -1,0 +1,30 @@
+---
+- hosts: worker
+  
+  vars_prompt:
+  - name: k3s_token
+    prompt: "K3S_TOKEN ?"
+    private: no
+
+  tasks:
+  - name: download k3s install script
+    get_url:
+      url: "https://get.k3s.io"
+      dest: "/tmp/install_k3s.sh"
+      mode: 755
+    become: yes
+
+  - name: install k3s agent
+    shell: "/tmp/install_k3s.sh"
+    environment:
+      INSTALL_K3S_EXEC: "agent --node-ip {{ ansible_eth0.ipv4.address }}"
+      INSTALL_K3S_VERSION: "v1.17.3+k3s1"
+      K3S_URL: "https://172.16.0.1:6443"
+      K3S_TOKEN: "{{ k3s_token }}"
+    become: yes
+
+  - name: remove install script
+    file:
+      path: "/tmp/install_k3s.sh"
+      state: absent
+    become: yes

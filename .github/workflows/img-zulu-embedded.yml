@@ -18,7 +18,7 @@ jobs:
       with:
         PREFIX_FILTER: |
           image/zulu-embedded
-          .github/workflow/img-zulu-embedded.yml
+          .github/workflows/img-zulu-embedded.yml
 
     - name: read JDK_VERSION
       uses: christian-draeger/read-properties@1.0.1

@@ -1,0 +1,57 @@
+name: build zulu embedded image workflow
+on:
+  push:
+    branches:
+    - master
+
+jobs:
+  build:
+    name: build zulu embedded image action
+    runs-on: ubuntu-18.04
+    steps:
+    - name: checkout source code
+      uses: actions/checkout@master
+
+    - name: check difference in zulu-embedded code
+      uses: technote-space/get-diff-action@v1.2.0
+      id: code-diff
+      with:
+        PREFIX_FILTER: image/zulu-embedded
+
+    - name: read JDK_VERSION
+      uses: christian-draeger/read-properties@1.0.1
+      id: jdk_version
+      with:
+        path: image/zulu-embedded/image.properties
+        property: jdk_version
+      if: steps.code-diff.outputs.diff
+
+    - name: read ZULU_VERSION
+      uses: christian-draeger/read-properties@1.0.1
+      id: zulu_version
+      with:
+        path: image/zulu-embedded/image.properties
+        property: zulu_version
+      if: steps.code-diff.outputs.diff
+
+    - name: set up docker buildx
+      uses: crazy-max/ghaction-docker-buildx@v1.0.5
+      id: buildx
+      with:
+        version: latest
+      if: steps.code-diff.outputs.diff
+
+    - name: login to docker hub
+      run: |
+        docker login --username ${{ secrets.DOCKER_USERNAME }} --password ${{ secrets.DOCKER_PASSWORD }}
+      if: steps.code-diff.outputs.diff
+
+    - name: build
+      run: |
+        docker buildx build \
+          --platform linux/arm64 \
+          --build-arg JDK_VERSION=${{ steps.jdk_version.outputs.value }} \
+          --build-arg ZULU_VERSION=${{ steps.zulu_version.outputs.value }} \
+          --output "type=image,name=docker.io/chiwanpark/zulu-embedded:${{ steps.zulu_version.outputs.value }}-aarch64,push=true" \
+          image/zulu_embedded/
+      if: steps.code-diff.outputs.diff

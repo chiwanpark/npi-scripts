@@ -16,7 +16,9 @@ jobs:
       uses: technote-space/get-diff-action@v1.2.0
       id: code-diff
       with:
-        PREFIX_FILTER: image/zulu-embedded
+        PREFIX_FILTER: |
+          image/zulu-embedded
+          .github/workflow/img-zulu-embedded.yml
 
     - name: read JDK_VERSION
       uses: christian-draeger/read-properties@1.0.1

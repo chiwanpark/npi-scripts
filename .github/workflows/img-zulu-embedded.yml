@@ -55,5 +55,5 @@ jobs:
           --build-arg JDK_VERSION=${{ steps.jdk_version.outputs.value }} \
           --build-arg ZULU_VERSION=${{ steps.zulu_version.outputs.value }} \
           --output "type=image,name=docker.io/chiwanpark/zulu-embedded:${{ steps.zulu_version.outputs.value }}-aarch64,push=true" \
-          image/zulu_embedded/
+          image/zulu-embedded/
       if: steps.code-diff.outputs.diff

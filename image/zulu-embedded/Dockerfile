@@ -12,9 +12,9 @@ ENV LANG=en_US.UTF-8 \
 
 WORKDIR /tmp
 RUN apt -y update && \
-    apt -y install curl ca-certificates p11-kit locales \
-    locale-gen en_US.UTF-8 \
-    curl -L -O https://cdn.azul.com/zulu-embedded/bin/${JDK_NAME}.tar.gz \
+    apt -y install curl ca-certificates p11-kit locales && \
+    locale-gen en_US.UTF-8 && \
+    curl -L -O https://cdn.azul.com/zulu-embedded/bin/${JDK_NAME}.tar.gz && \
     tar -xzf ${JDK_NAME}.tar.gz -C /opt && \
     rm -rf /tmp/${JDK_NAME}.tar.gz && \
     mv /opt/${JDK_NAME} /opt/jdk && \

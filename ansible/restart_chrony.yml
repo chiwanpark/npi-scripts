@@ -1,0 +1,8 @@
+---
+- hosts: all
+  tasks:
+    - name: Restart chrony
+      systemd:
+        name: chrony
+        state: restarted
+      become: yes

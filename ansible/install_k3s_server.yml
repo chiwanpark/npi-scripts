@@ -1,11 +1,6 @@
 ---
-- hosts: worker
+- hosts: master
   
-  vars_prompt:
-  - name: k3s_token
-    prompt: "K3S_TOKEN ?"
-    private: no
-
   tasks:
   - name: download k3s install script
     get_url:
@@ -14,13 +9,11 @@
       mode: 755
     become: yes
 
-  - name: install k3s agent
+  - name: install k3s server
     shell: "/tmp/install_k3s.sh"
     environment:
-      INSTALL_K3S_EXEC: "agent --node-ip {{ ansible_eth0.ipv4.address }}"
+      INSTALL_K3S_EXEC: "server --advertise-address 172.16.0.1 --bind-address 172.16.0.1"
       INSTALL_K3S_VERSION: "v1.18.3+k3s1"
-      K3S_URL: "https://172.16.0.1:6443"
-      K3S_TOKEN: "{{ k3s_token }}"
     become: yes
 
   - name: remove install script
@@ -28,3 +21,12 @@
       path: "/tmp/install_k3s.sh"
       state: absent
     become: yes
+
+  - name: retrieve k3s token
+    shell: cat /var/lib/rancher/k3s/server/node-token
+    register: k3s_token
+    become: yes
+
+  - name: show k3s token
+    debug:
+      msg: "{{ k3s_token.stdout }}"
